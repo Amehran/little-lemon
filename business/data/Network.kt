@@ -30,7 +30,7 @@ data class MenuItemNetwork(
 
     @SerialName("image")
     val imageUrl: String
-){
+) {
     fun toMenuItemRoom() = MenuItemRoom(
         id = id,
         title = title,

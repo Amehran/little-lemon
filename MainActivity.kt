@@ -1,5 +1,6 @@
 package com.arminmehran.little_lemmon_app_capstone
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,10 +9,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.arminmehran.little_lemmon_app_capstone.navigation.NavigationComposable
 import com.arminmehran.little_lemmon_app_capstone.ui.theme.LittleLemonTheme
@@ -19,37 +19,39 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-val viewModel : MainViewModel by viewModels()
+    val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            LittleLemonTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    NavigationComposable(context = applicationContext,navController = navController, viewModel)
-                }
-            }
+            val navController = rememberNavController()
+
+            LittleLemon(
+                applicationContext,
+                navController = navController,
+                viewModel
+            )
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
+fun LittleLemon(
+    applicationContext: Context,
+    navController: NavHostController,
+    viewModel: MainViewModel
+) {
     LittleLemonTheme {
-        Greeting("Android")
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NavigationComposable(
+                context = applicationContext,
+                navController = navController,
+                viewModel
+            )
+        }
     }
 }

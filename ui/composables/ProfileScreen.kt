@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,7 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.arminmehran.little_lemmon_app_capstone.MainViewModel
 import com.arminmehran.little_lemmon_app_capstone.R
-import com.arminmehran.little_lemmon_app_capstone.ui.theme.PrimaryGreen
+import com.arminmehran.little_lemmon_app_capstone.navigation.Screen.Home
+import com.arminmehran.little_lemmon_app_capstone.navigation.Screen.Onboarding
 
 @Composable
 fun GreetingProfile(context: Context, navController: NavHostController, viewModel: MainViewModel) {
@@ -78,7 +78,6 @@ fun GreetingProfile(context: Context, navController: NavHostController, viewMode
             label = { Text(text = "First Name") },
             singleLine = true,
             placeholder = { Text(text = "John") },
-            colors = TextFieldDefaults.colors( PrimaryGreen, PrimaryGreen),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -90,7 +89,6 @@ fun GreetingProfile(context: Context, navController: NavHostController, viewMode
             label = { Text(text = "Last Name") },
             singleLine = true,
             placeholder = { Text(text = "Doe") },
-            colors = TextFieldDefaults.colors(PrimaryGreen, PrimaryGreen),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -102,7 +100,6 @@ fun GreetingProfile(context: Context, navController: NavHostController, viewMode
             label = { Text(text = "Email") },
             singleLine = true,
             placeholder = { Text(text = "johndoe@gmail.com") },
-            colors = TextFieldDefaults.colors(PrimaryGreen, PrimaryGreen),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -114,8 +111,8 @@ fun GreetingProfile(context: Context, navController: NavHostController, viewMode
                     .clear()
                     .apply()
 
-                navController.navigate(com.arminmehran.little_lemmon_app_capstone.navigation.Onboarding.route) {
-                    popUpTo(com.arminmehran.little_lemmon_app_capstone.navigation.Home.route) {
+                navController.navigate(Onboarding.route) {
+                    popUpTo(Home.route) {
                         inclusive = true
                     }
                     launchSingleTop = true

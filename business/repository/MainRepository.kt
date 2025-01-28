@@ -30,7 +30,7 @@ interface MainRepository {
      */
     suspend fun updateItem(item: MenuItemRoom)
 
-    suspend fun  fetchItemsFromNetwork(url:String): List<MenuItemNetwork>
+    suspend fun fetchItemsFromNetwork(url: String): List<MenuItemNetwork>
 
     suspend fun getAllDatabaseMenuItems(): Flow<List<MenuItemRoom>>
 

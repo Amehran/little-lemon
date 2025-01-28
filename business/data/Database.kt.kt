@@ -1,7 +1,12 @@
 package com.arminmehran.little_lemmon_app_capstone.business.data
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Database
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
 
 @Entity
@@ -16,7 +21,7 @@ data class MenuItemRoom(
 )
 
 @Dao
-interface MenuItemDao{
+interface MenuItemDao {
     @Query("SELECT * FROM MenuItemRoom")
     fun getAll(): Flow<List<MenuItemRoom>>
 
@@ -28,6 +33,6 @@ interface MenuItemDao{
 }
 
 @Database(entities = [MenuItemRoom::class], version = 1)
-abstract class AppDatabase: RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun menuItemDao(): MenuItemDao
 }

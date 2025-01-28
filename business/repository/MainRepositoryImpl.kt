@@ -63,6 +63,4 @@ class MainRepositoryImpl @Inject constructor(
         val menuItemsRoom = menuItemsNetwork.map { it.toMenuItemRoom() }
         dao.insertAll(*menuItemsRoom.toTypedArray())
     }
-
-
 }

@@ -10,18 +10,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repo: MainRepositoryImpl): ViewModel() {
+class MainViewModel @Inject constructor(private val repo: MainRepositoryImpl) : ViewModel() {
     private val _menuItems = MutableStateFlow<List<MenuItemRoom>>(emptyList())
     val menuItems: StateFlow<List<MenuItemRoom>> = _menuItems.asStateFlow()
 
-   suspend  fun fetchMenuItems(url:String) {
-       val menuList = repo.fetchItemsFromNetwork("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
-       _menuItems.value = menuList.map { it.toMenuItemRoom() }.sortedBy { it.title }
-
-       }
-
-    suspend fun getAllMenuItems() =
-        repo.getAllDatabaseMenuItems().collect{
+    suspend fun fetchMenuItems() {
+        val menuList =
+            repo.fetchItemsFromNetwork("https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/menu.json")
+        _menuItems.value = menuList.map { it.toMenuItemRoom() }.sortedBy { it.title }
 
     }
+
+    suspend fun getAllMenuItems() =
+        repo.getAllDatabaseMenuItems().collect { items ->
+            if (items.isEmpty()) {
+                fetchMenuItems()
+            } else {
+                _menuItems.value = items
+            }
+        }
 }
