@@ -1,10 +1,9 @@
 package com.arminmehran.little_lemmon_app_capstone.ui.composables
 
 import android.content.Context
-import androidx.compose.foundation.Image
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,34 +17,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.arminmehran.little_lemmon_app_capstone.MainViewModel
-import com.arminmehran.little_lemmon_app_capstone.R
 import com.arminmehran.little_lemmon_app_capstone.navigation.Screen.Home
 import com.arminmehran.little_lemmon_app_capstone.navigation.Screen.Onboarding
 
 @Composable
 fun GreetingProfile(context: Context, navController: NavHostController, viewModel: MainViewModel) {
     val sharedPreferences = context.getSharedPreferences("Little Lemon", Context.MODE_PRIVATE)
-    val firstName = remember {
-        mutableStateOf(sharedPreferences.getString("firstName", ""))
-    }
-
-    val lastName = remember {
-        mutableStateOf(sharedPreferences.getString("lastName", ""))
-    }
-
-    val email = remember {
-        mutableStateOf(sharedPreferences.getString("email", ""))
-    }
-
+    val firstName = remember { mutableStateOf(sharedPreferences.getString("firstName", "")) }
+    val lastName = remember { mutableStateOf(sharedPreferences.getString("lastName", "")) }
+    val email = remember { mutableStateOf(sharedPreferences.getString("email", "")) }
     val scrollState = rememberScrollState()
 
 
@@ -57,73 +46,85 @@ fun GreetingProfile(context: Context, navController: NavHostController, viewMode
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Row(Modifier.fillMaxWidth(0.6f)) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Little Lemon Logo"
-            )
-        }
 
-        Text(
-            text = "Personal Information",
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.titleSmall
-        )
-        OutlinedTextField(
-            enabled = false,
-            readOnly = true,
-            value = firstName.value!!,
-            onValueChange = {},
-            label = { Text(text = "First Name") },
-            singleLine = true,
-            placeholder = { Text(text = "John") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            enabled = false,
-            readOnly = true,
-            value = lastName.value!!,
-            onValueChange = {},
-            label = { Text(text = "Last Name") },
-            singleLine = true,
-            placeholder = { Text(text = "Doe") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        OutlinedTextField(
-            enabled = false,
-            readOnly = true,
-            value = email.value!!,
-            onValueChange = {},
-            label = { Text(text = "Email") },
-            singleLine = true,
-            placeholder = { Text(text = "johndoe@gmail.com") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.size(40.dp))
-
-        Button(
-            onClick = {
-                sharedPreferences.edit()
-                    .clear()
-                    .apply()
-
-                navController.navigate(Onboarding.route) {
-                    popUpTo(Home.route) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
-
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text(text = "Log Out")
-        }
+        Header2(navController)
+        UpperPanel(firstName, lastName, email)
+        LowerPannel(sharedPreferences, navController)
     }
 }
+
+@Composable
+private fun LowerPannel(
+    sharedPreferences: SharedPreferences,
+    navController: NavHostController
+) {
+    Button(
+        onClick = {
+            sharedPreferences.edit()
+                .clear()
+                .apply()
+
+            navController.navigate(Onboarding.route) {
+                popUpTo(Home.route) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
+
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+    ) {
+        Text(text = "Log Out")
+    }
+}
+
+@Composable
+private fun UpperPanel(
+    firstName: MutableState<String?>,
+    lastName: MutableState<String?>,
+    email: MutableState<String?>
+) {
+    Text(
+        text = "Personal Information",
+        textAlign = TextAlign.Start,
+        modifier = Modifier.fillMaxWidth(),
+        style = MaterialTheme.typography.titleSmall
+    )
+    OutlinedTextField(
+        enabled = false,
+        readOnly = true,
+        value = firstName.value!!,
+        onValueChange = {},
+        label = { Text(text = "First Name") },
+        singleLine = true,
+        placeholder = { Text(text = "John") },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        enabled = false,
+        readOnly = true,
+        value = lastName.value!!,
+        onValueChange = {},
+        label = { Text(text = "Last Name") },
+        singleLine = true,
+        placeholder = { Text(text = "Doe") },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    OutlinedTextField(
+        enabled = false,
+        readOnly = true,
+        value = email.value!!,
+        onValueChange = {},
+        label = { Text(text = "Email") },
+        singleLine = true,
+        placeholder = { Text(text = "johndoe@gmail.com") },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Spacer(modifier = Modifier.size(40.dp))
+}
+

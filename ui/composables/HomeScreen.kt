@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,6 +23,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -49,7 +47,6 @@ import androidx.navigation.NavHostController
 import com.arminmehran.little_lemmon_app_capstone.MainViewModel
 import com.arminmehran.little_lemmon_app_capstone.R
 import com.arminmehran.little_lemmon_app_capstone.business.data.MenuItemRoom
-import com.arminmehran.little_lemmon_app_capstone.navigation.Screen.Profile
 import com.arminmehran.little_lemmon_app_capstone.ui.theme.PrimaryGreen
 import com.arminmehran.little_lemmon_app_capstone.ui.theme.PrimaryYellow
 import com.arminmehran.little_lemmon_app_capstone.ui.theme.Secondary2
@@ -65,46 +62,19 @@ fun Home(navController: NavHostController, viewModel: MainViewModel) {
 
     val searchPhrase = remember { mutableStateOf("") }
 
-//    LaunchedEffect(Unit) {
-//        viewModel.fetchMenuItems()
-//    }
+    Scaffold(
+        topBar = {
+            Header2(navController = navController)
+        }
+    ) { innerPadding ->
 
-    Column() {
-        Header(navController)
-        UpperPanel() { searchPhrase.value = it }
-        LowerPanel(menuItemsState, searchPhrase)
-    }
-}
-
-
-@Composable
-fun Header(navController: NavHostController) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Spacer(modifier = Modifier.width(50.dp))
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = stringResource(R.string.little_lemon_logo),
+        Column(
             modifier = Modifier
-                .fillMaxWidth(0.65f)
-        )
-
-        Box(modifier = Modifier
-            .size(50.dp)
-            .clickable { navController.navigate(Profile.route) }) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = stringResource(R.string.profile_icon_description),
-                tint = PrimaryGreen,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 2.dp)
-            )
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            UpperPanel() { searchPhrase.value = it }
+            LowerPanel(menuItemsState, searchPhrase)
         }
     }
 }
@@ -125,7 +95,11 @@ fun UpperPanel(search: (parameter: String) -> Unit) {
             style = MaterialTheme.typography.titleLarge,
             color = PrimaryYellow
         )
-        Text(text = stringResource(R.string.new_york), style = MaterialTheme.typography.titleSmall, color = Color.White)
+        Text(
+            text = stringResource(R.string.new_york),
+            style = MaterialTheme.typography.titleSmall,
+            color = Color.White
+        )
         Row(
             Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -161,7 +135,7 @@ fun UpperPanel(search: (parameter: String) -> Unit) {
                     contentDescription = stringResource(R.string.search_icon)
                 )
             },
-            colors = TextFieldDefaults.colors(Color.Black,MaterialTheme.colorScheme.background),
+            colors = TextFieldDefaults.colors(Color.Black, MaterialTheme.colorScheme.background),
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
